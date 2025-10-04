@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unifyed — App Screens</title>
+
+  <!-- Fonts & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <style>
+    :root{
+      --primary:#6b49ff;
+      --accent:#48bfe3;
+      --bg:#f6f9ff;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#111827;
+      --radius:10px;
+      --gap:10px;
+      --small:0.85rem;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,var(--bg),#eef6ff);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      font-size:14px;
+    }
+
+    /* Header */
+    header{
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 14px;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      color:#fff;
+      position:sticky;
+      top:0;
+      z-index:50;
+      box-shadow:0 3px 12px rgba(12,20,40,0.08);
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:600}
+    .brand .logo{
+      width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:700;
+      box-shadow:inset 0 -6px 18px rgba(0,0,0,0.06);
+    }
+    .header-right{display:flex;align-items:center;gap:10px}
+    .search{background:rgba(255,255,255,0.12);padding:6px 8px;border-radius:8px;display:flex;gap:8px;align-items:center}
+    .search input{border:none;background:transparent;color:#fff;outline:none;font-size:13px;width:180px}
+    .user{display:flex;align-items:center;gap:8px}
+    .avatar{width:34px;height:34px;border-radius:50%;background:#fff;border:2px solid rgba(255,255,255,0.14)}
+
+    /* Layout */
+    main{display:grid;grid-template-columns:220px 1fr;gap:12px;min-height:calc(100vh - 56px);padding:12px}
+    nav.sidebar{
+      background:var(--card);
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 6px 18px rgba(16,24,40,0.06);
+      display:flex;flex-direction:column;gap:8px;
+      min-height:calc(100vh - 90px);
+    }
+    .nav-item{
+      display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;color:var(--text);text-decoration:none;font-size:var(--small);
+      transition:all .18s ease;cursor:pointer;
+    }
+    .nav-item .material-symbols-outlined{font-size:20px;color:var(--primary)}
+    .nav-item:hover{background:linear-gradient(90deg,rgba(107,73,255,0.08),rgba(72,191,227,0.06))}
+    .nav-item.active{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff}
+    .nav-item.active .material-symbols-outlined{color:#fff}
+
+    /* Content area */
+    section.canvas{
+      padding:12px;
+      display:flex;flex-direction:column;gap:12px;
+    }
+
+    .screen{
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 6px 18px rgba(16,24,40,0.04);
+      display:none;
+      min-height:220px;
+    }
+    .screen.active{display:block}
+
+    /* Compact top cards row inside screens */
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px}
+    .card{
+      padding:10px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);
+      box-shadow:0 8px 20px rgba(12,20,40,0.04);font-size:13px;
+    }
+    .card h4{margin:0 0 4px 0;font-size:13px;color:var(--primary)}
+    .card p{margin:0;color:var(--muted);font-size:12px}
+
+    /* tables / lists */
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid #f0f3f8;text-align:left}
+    th{font-weight:600;color:var(--muted);font-size:12px}
+    td .badge{padding:6px 8px;border-radius:999px;font-weight:600;font-size:12px}
+    .present{color:#16a34a;background:#ecfdf5;border:1px solid #bbf7d0}
+    .absent{color:#dc2626;background:#fff1f2;border:1px solid #fecaca}
+    .leave{color:#b45309;background:#fff7ed;border:1px solid #fbd38d}
+
+    /* chat UI */
+    .chat-window{display:flex;flex-direction:column;height:380px;border-radius:10px;overflow:hidden}
+    .messages{flex:1;padding:10px;overflow:auto;background:linear-gradient(180deg,#fbfdff,#f7fbff)}
+    .msg{display:flex;margin-bottom:8px;gap:8px}
+    .msg.me{justify-content:flex-end}
+    .bubble{max-width:70%;padding:8px 10px;border-radius:10px;background:#fff;box-shadow:0 6px 18px rgba(16,24,40,0.03);font-size:13px}
+    .bubble.me{background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff}
+    .chat-input{display:flex;gap:8px;padding:8px;border-top:1px solid #eef3fb;background:#fafcff}
+    .chat-input input{flex:1;padding:8px;border-radius:8px;border:1px solid #e6eefb;font-size:13px}
+
+    /* compact widgets */
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .small-list{display:flex;flex-direction:column;gap:6px}
+    .muted{color:var(--muted);font-size:12px}
+
+    /* responsive */
+    @media (max-width:900px){
+      main{grid-template-columns:1fr; padding:10px}
+      nav.sidebar{flex-direction:row;overflow:auto;height:auto;padding:8px}
+      .nav-item{flex-direction:column;min-width:72px;font-size:12px;padding:10px}
+      header .search input{width:110px}
+    }
+  </style>
+</head>
+<body>
+
+  <header role="banner" aria-label="Unifyed header">
+    <div class="brand" aria-hidden="false">
+      <div class="logo">U</div>
+      <div>
+        <div style="font-size:14px">Unifyed</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.85);margin-top:2px">Empowering education</div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="search" role="search" aria-label="Search">
+        <span class="material-symbols-outlined" style="color:rgba(255,255,255,0.9);font-size:18px">search</span>
+        <input type="search" placeholder="Search students, topics..." aria-label="Search input" />
+      </div>
+
+      <div class="user" title="Profile">
+        <div class="avatar" aria-hidden="true"></div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.95)">Riya</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SIDEBAR NAV -->
+    <nav class="sidebar" aria-label="Primary navigation">
+      <!-- List of screens requested -->
+      <div class="nav-item active" data-target="school"><span class="material-symbols-outlined">home_work</span><div>School</div></div>
+      <div class="nav-item" data-target="academics"><span class="material-symbols-outlined">school</span><div>Academics</div></div>
+      <div class="nav-item" data-target="fact_check"><span class="material-symbols-outlined">rule</span><div>Fact Check</div></div>
+      <div class="nav-item" data-target="attendance"><span class="material-symbols-outlined">fact_check</span><div>Attendance</div></div>
+      <div class="nav-item" data-target="payments"><span class="material-symbols-outlined">payments</span><div>Payments</div></div>
+      <div class="nav-item" data-target="fees"><span class="material-symbols-outlined">account_balance_wallet</span><div>Fees</div></div>
+      <div class="nav-item" data-target="performance"><span class="material-symbols-outlined">bar_chart</span><div>Performance</div></div>
+      <div class="nav-item" data-target="chat_live"><span class="material-symbols-outlined">chat</span><div>Chat (Live)</div></div>
+      <div class="nav-item" data-target="chat_archived"><span class="material-symbols-outlined">forum</span><div>Chat (Archived)</div></div>
+      <div class="nav-item" data-target="memo"><span class="material-symbols-outlined">description</span><div>Memo</div></div>
+      <div class="nav-item" data-target="rankers"><span class="material-symbols-outlined">emoji_events</span><div>Rankers</div></div>
+      <div class="nav-item" data-target="history_activity"><span class="material-symbols-outlined">history_edu</span><div>History (Activity)</div></div>
+      <div class="nav-item" data-target="history_payments"><span class="material-symbols-outlined">history</span><div>History (Payments)</div></div>
+    </nav>
+
+    <!-- CONTENT CANVAS -->
+    <section class="canvas" id="canvas" role="main" aria-live="polite">
+
+      <!-- 1) School -->
+      <article id="school" class="screen active" aria-labelledby="school-title">
+        <h3 id="school-title" style="margin:0 0 8px 0;font-size:15px">School Overview</h3>
+        <div class="cards" aria-hidden="false">
+          <div class="card"><h4>Horizon Academy</h4><p class="muted">Branch: Main Campus • 1,200 students</p></div>
+          <div class="card"><h4>Streams</h4><p class="muted">Science • Commerce • Arts</p></div>
+          <div class="card"><h4>Contact</h4><p class="muted">+91-98765-43210 • support@unifyed.com</p></div>
+          <div class="card"><h4>Next Event</h4><p class="muted">Inter-school Quiz • 18 Oct</p></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <div style="background:linear-gradient(90deg,#fff,#fbfdff);padding:10px;border-radius:10px">
+              <div style="font-weight:600;font-size:13px">Quick Links</div>
+              <div class="small-list" style="margin-top:8px">
+                <a style="color:var(--primary);text-decoration:none;font-size:13px">Manage Teachers</a>
+                <a style="color:var(--primary);text-decoration:none;font-size:13px">Create Class</a>
+                <a style="color:var(--primary);text-decoration:none;font-size:13px">Import Students</a>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;min-width:260px">
+            <div style="background:linear-gradient(90deg,#fff,#fbfdff);padding:10px;border-radius:10px">
+              <div style="font-weight:600;font-size:13px">Announcements</div>
+              <div class="muted" style="margin-top:8px">No active announcements. Use the Announcements module to broadcast messages to all students.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2) Academics -->
+      <article id="academics" class="screen" aria-labelledby="academics-title">
+        <h3 id="academics-title" style="font-size:15px;margin:0 0 8px 0">Academics</h3>
+        <div class="cards">
+          <div class="card"><h4>Classes</h4><p class="muted">10th, 11th, 12th — multiple sections</p></div>
+          <div class="card"><h4>Subjects</h4><p class="muted">Math, Physics, Chemistry, Biology, CS</p></div>
+          <div class="card"><h4>Syllabus</h4><p class="muted">Upload PDFs & track coverage</p></div>
+          <div class="card"><h4>Model Qs</h4><p class="muted">Add tests and question banks</p></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:300px">
+            <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+              <div style="font-weight:600">Syllabus Progress</div>
+              <table aria-label="Syllabus table">
+                <thead><tr><th>Subject</th><th style="width:120px">Completed</th></tr></thead>
+                <tbody>
+                  <tr><td>Mathematics</td><td>85%</td></tr>
+                  <tr><td>Physics</td><td>78%</td></tr>
+                  <tr><td>Chemistry</td><td>82%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="flex:0.9;min-width:240px">
+            <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+              <div style="font-weight:600">Uploads</div>
+              <div class="muted" style="margin-top:8px">No recent uploads. Teachers can upload notes, model questions and answer keys here.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3) Fact Check -->
+      <article id="fact_check" class="screen" aria-labelledby="factcheck-title">
+        <h3 id="factcheck-title" style="font-size:15px;margin:0 0 8px 0">Fact Check</h3>
+
+        <div class="card" style="margin-bottom:8px">
+          <div style="font-weight:600">Verify Student Data</div>
+          <div class="muted" style="margin-top:6px">Quick checks for duplicate entries, invalid emails, and inconsistent roll numbers.</div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+              <div style="font-weight:600">Integrity Checks</div>
+              <ul class="muted" style="margin-top:6px;line-height:1.5">
+                <li>Duplicate detection: 0 flagged</li>
+                <li>Invalid emails: 2 flagged</li>
+                <li>Missing guardian contact: 1 flagged</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4) Attendance -->
+      <article id="attendance" class="screen" aria-labelledby="attendance-title">
+        <h3 id="attendance-title" style="font-size:15px;margin:0 0 8px 0">Attendance</h3>
+
+        <div class="cards">
+          <div class="card"><h4>Present</h4><p class="muted">28</p></div>
+          <div class="card"><h4>Absent</h4><p class="muted">3</p></div>
+          <div class="card"><h4>Leave</h4><p class="muted">1</p></div>
+          <div class="card"><h4>Percentage</h4><p class="muted">87%</p></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:300px">
+            <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+              <div style="font-weight:600">Last 7 days</div>
+              <table aria-label="Attendance last 7 days">
+                <thead><tr><th>Date</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>2025-09-27</td><td><span class="badge present">Present</span></td></tr>
+                  <tr><td>2025-09-28</td><td><span class="badge absent">Absent</span></td></tr>
+                  <tr><td>2025-09-29</td><td><span class="badge present">Present</span></td></tr>
+                  <tr><td>2025-09-30</td><td><span class="badge leave">Leave</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="flex:0.9;min-width:220px">
+            <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+              <div style="font-weight:600">Manage Attendance</div>
+              <div class="muted" style="margin-top:8px">Quick actions: mark bulk present, export CSV, set auto-reminders.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5) Payments -->
+      <article id="payments" class="screen" aria-labelledby="payments-title">
+        <h3 id="payments-title" style="font-size:15px;margin:0 0 8px 0">Payments</h3>
+
+        <div class="cards">
+          <div class="card"><h4>Pending</h4><p class="muted">12 invoices</p></div>
+          <div class="card"><h4>Due This Month</h4><p class="muted">₹ 92,000</p></div>
+          <div class="card"><h4>Received</h4><p class="muted">₹ 3,20,000</p></div>
+          <div class="card"><h4>Last Payment</h4><p class="muted">09 Oct 2025</p></div>
+        </div>
+
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Payment Methods</div>
+          <div class="muted" style="margin-top:8px">UPI, Netbanking, Card, Cash — configure payment gateway and remittance accounts here.</div>
+        </div>
+      </article>
+
+      <!-- 6) Fees -->
+      <article id="fees" class="screen" aria-labelledby="fees-title">
+        <h3 id="fees-title" style="font-size:15px;margin:0 0 8px 0">Fees</h3>
+
+        <div class="cards">
+          <div class="card"><h4>Installments</h4><p class="muted">Monthly / Quarterly / Yearly</p></div>
+          <div class="card"><h4>Overdue</h4><p class="muted">6 students</p></div>
+          <div class="card"><h4>Receipt</h4><p class="muted">Auto-generate PDF receipts</p></div>
+          <div class="card"><h4>Discounts</h4><p class="muted">Scholarships / Concessions</p></div>
+        </div>
+
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Fee Ledger</div>
+          <div class="muted" style="margin-top:8px">Download student-wise ledgers in CSV or PDF format for audits.</div>
+        </div>
+      </article>
+
+      <!-- 7) Performance -->
+      <article id="performance" class="screen" aria-labelledby="performance-title">
+        <h3 id="performance-title" style="font-size:15px;margin:0 0 8px 0">Performance</h3>
+
+        <div class="cards">
+          <div class="card"><h4>Average Score</h4><p class="muted">78%</p></div>
+          <div class="card"><h4>Topper</h4><p class="muted">Ananya • 98%</p></div>
+          <div class="card"><h4>Median</h4><p class="muted">76%</p></div>
+          <div class="card"><h4>Std Dev</h4><p class="muted">6.5</p></div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:320px">
+            <div style="padding:10px;border-radius:10px;background:linear-gradient(90deg,#fff,#fbfdff)">
+              <div style="font-weight:600">Trend (Last 6 tests)</div>
+              <!-- Simple SVG sparkline placeholder -->
+              <svg width="100%" height="60" viewBox="0 0 300 60" preserveAspectRatio="none">
+                <polyline fill="none" stroke="#6b49ff" stroke-width="3" points="0,45 50,30 100,35 150,20 200,28 250,18 300,12"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <div style="flex:0.9;min-width:220px">
+            <div style="padding:10px;border-radius:10px;background:linear-gradient(90deg,#fff,#fbfdff)">
+              <div style="font-weight:600">Compare</div>
+              <div class="muted" style="margin-top:8px">Compare class averages, subjects, or custom groups.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8) Chat (Live) -->
+      <article id="chat_live" class="screen" aria-labelledby="chatlive-title">
+        <h3 id="chatlive-title" style="font-size:15px;margin:0 0 8px 0">Chat — Live</h3>
+
+        <div class="chat-window">
+          <div class="messages" id="messages">
+            <div class="msg"><div class="bubble">Hello! How can I help you today?</div></div>
+            <div class="msg me"><div class="bubble me">I have a doubt in physics chapter 3.</div></div>
+            <div class="msg"><div class="bubble">Sure — please share the exact question.</div></div>
+          </div>
+
+          <div class="chat-input" aria-label="Chat input">
+            <input id="chatText" placeholder="Type message..." aria-label="Type message"/>
+            <button id="sendBtn" style="padding:8px 10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--primary),var(--accent));color:#fff">Send</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 9) Chat (Archived) -->
+      <article id="chat_archived" class="screen" aria-labelledby="chata-title">
+        <h3 id="chata-title" style="font-size:15px;margin:0 0 8px 0">Chat — Archived</h3>
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Conversations</div>
+          <ul class="muted" style="margin-top:8px;line-height:1.6">
+            <li>Riya — Physics doubt • 02 Oct 2025</li>
+            <li>Aditya — Fee receipt request • 28 Sep 2025</li>
+            <li>Parent — Meeting request • 20 Sep 2025</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 10) Memo -->
+      <article id="memo" class="screen" aria-labelledby="memo-title">
+        <h3 id="memo-title" style="font-size:15px;margin:0 0 8px 0">Memo</h3>
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Personal Notes</div>
+          <div class="muted" style="margin-top:8px">No memos. Use this space to keep private notes for students or classes.</div>
+        </div>
+      </article>
+
+      <!-- 11) Rankers -->
+      <article id="rankers" class="screen" aria-labelledby="rankers-title">
+        <h3 id="rankers-title" style="font-size:15px;margin:0 0 8px 0">Top Rankers</h3>
+
+        <div class="mini-grid" style="margin-bottom:8px">
+          <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:8px">
+            <div style="font-weight:600">1st</div>
+            <div class="muted">Ananya — 98%</div>
+          </div>
+          <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:8px">
+            <div style="font-weight:600">2nd</div>
+            <div class="muted">Rohan — 95%</div>
+          </div>
+        </div>
+
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Leaderboard</div>
+          <table>
+            <thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Ananya</td><td>98</td></tr>
+              <tr><td>2</td><td>Rohan</td><td>95</td></tr>
+              <tr><td>3</td><td>Priya</td><td>92</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- 12) History (Activity) -->
+      <article id="history_activity" class="screen" aria-labelledby="historya-title">
+        <h3 id="historya-title" style="font-size:15px;margin:0 0 8px 0">History — Activity (45 days)</h3>
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Recent Actions</div>
+          <div class="muted" style="margin-top:8px;line-height:1.6">
+            04 Oct 2025 — Attendance updated for Class 12B<br>
+            02 Oct 2025 — New model paper uploaded for Physics<br>
+            28 Sep 2025 — Fee receipts generated (45 students)
+          </div>
+        </div>
+      </article>
+
+      <!-- 13) History (Payments) -->
+      <article id="history_payments" class="screen" aria-labelledby="historyp-title">
+        <h3 id="historyp-title" style="font-size:15px;margin:0 0 8px 0">History — Payments</h3>
+        <div style="padding:10px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px">
+          <div style="font-weight:600">Payments Log</div>
+          <table>
+            <thead><tr><th>Date</th><th>Student</th><th>Amount</th><th>Mode</th></tr></thead>
+            <tbody>
+              <tr><td>02 Oct 2025</td><td>Ananya</td><td>₹ 20,000</td><td>Card</td></tr>
+              <tr><td>28 Sep 2025</td><td>Rohan</td><td>₹ 5,000</td><td>UPI</td></tr>
+              <tr><td>25 Sep 2025</td><td>Priya</td><td>₹ 5,000</td><td>Cash</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer style="text-align:center;padding:10px;font-size:12px;color:var(--muted)">
+    © 2025 Unifyed • Built for schools and tutors
+  </footer>
+
+  <script>
+    // Navigation: show/hide screens
+    const navItems = document.querySelectorAll('.nav-item');
+    const screens = document.querySelectorAll('.screen');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // active class in sidebar
+        navItems.forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+
+        // show correct screen
+        const target = item.getAttribute('data-target');
+        screens.forEach(s => s.classList.toggle('active', s.id === target));
+
+        // focus top of canvas for accessibility
+        const activeScreen = document.getElementById(target);
+        if(activeScreen) activeScreen.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    });
+
+    // Small chat demo: send message
+    const sendBtn = document.getElementById('sendBtn');
+    const chatText = document.getElementById('chatText');
+    const messages = document.getElementById('messages');
+
+    if(sendBtn){
+      sendBtn.addEventListener('click', () => {
+        const val = chatText.value && chatText.value.trim();
+        if(!val) return;
+        const me = document.createElement('div');
+        me.className = 'msg me';
+        me.innerHTML = '<div class="bubble me">'+escapeHtml(val)+'</div>';
+        messages.appendChild(me);
+        chatText.value = '';
+        messages.scrollTop = messages.scrollHeight;
+
+        // fake reply
+        setTimeout(()=> {
+          const bot = document.createElement('div');
+          bot.className = 'msg';
+          bot.innerHTML = '<div class="bubble">Thanks — we will get back to you soon.</div>';
+          messages.appendChild(bot);
+          messages.scrollTop = messages.scrollHeight;
+        }, 700);
+      });
+    }
+
+    // quick helper
+    function escapeHtml(unsafe) {
+      return unsafe.replace(/[&<"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','"':'&quot;',"'":'&#039;'}[m]); });
+    }
+
+    // keyboard send (enter) for chat
+    if(chatText){
+      chatText.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){ sendBtn.click(); e.preventDefault(); }
+      });
+    }
+
+    // optional: deep-link to screen via hash
+    (function checkHash(){
+      const h = location.hash.replace('#','');
+      if(!h) return;
+      const targetItem = Array.from(navItems).find(n => n.dataset.target === h);
+      if(targetItem) targetItem.click();
+    })();
+  </script>
+
+</body>
+</html>
